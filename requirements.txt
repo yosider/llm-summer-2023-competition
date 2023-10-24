@@ -1,0 +1,12 @@
+accelerate
+bitsandbytes
+langchain
+datasets
+GPUtil
+optimum
+peft
+python-dotenv
+scipy
+transformers
+trl
+wandb
