@@ -18,13 +18,14 @@ SERPER_API_KEY=xxx
 ```bash
 export HF_HOME=/mnt/ms-nas-2/yoshida/huggingface/
 ```
-- (fine-tuningする場合)wandbにログイン
+- (fine-tuningする場合)wandbにログイン  
+  (現状、openorca-stxのJCommonsenseQAによるfine-tuningのみ対応しています)
 ```bash
 wandb login
 ```
 
 ## Run
-`data/`以下にデータを配置し、`main.py`内でファイル名を指定してください。
+`data/`以下にデータを配置し、`main.py`内でファイル名を指定した後、実行してください。
 ```python
 python main.py
 ```
