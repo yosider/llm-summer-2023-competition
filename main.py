@@ -75,14 +75,13 @@ start_time = time.time()
 with open(test_json, "r") as f:
     test_data = json.load(f)
 
-choices = ["1", "2", "3", "4", "5"]
-choices_ids = tokenizer.convert_tokens_to_ids(choices)
+choices_ids = tokenizer.convert_tokens_to_ids(["1", "2", "3", "4", "5"])
 
 for data in test_data:
     print("\n" + "*" * 30)
     print(f"question {data['id']}")
 
-    additional_prompt = ""
+    rag_prompt = ""
 
     if data["task_type"] == "multiple_choice":
         # 各選択肢番号のトークンが次に来る確率を計算
@@ -106,17 +105,17 @@ for data in test_data:
             p_sorted[0] - p_sorted[1] < thr_prob_rel
         )
         if do_retrieval:
-            additional_prompt = "\n[参考: Google検索結果]:\n"
+            rag_prompt = "\n[参考: Google検索結果]:\n"
             for choice in data["choices"]:
                 query = f"{data['text']} {choice['text']}"
                 ret = search.run(query)
                 ret_use = "...".join(ret.split("...")[:num_retrieval])
-                additional_prompt += f"{choice['choice_id']}. 検索ワード: \"{query}\"\n"
-                additional_prompt += f"{ret_use}\n"
+                rag_prompt += f"{choice['choice_id']}. 検索ワード: \"{query}\"\n"
+                rag_prompt += f"{ret_use}\n"
 
         del inputs, outputs
 
-    prompt = make_prompt(data, model_name, additional_prompt=additional_prompt)
+    prompt = make_prompt(data, model_name, additional_prompt=rag_prompt)
     inputs = tokenizer(prompt, add_special_tokens=False, return_tensors="pt").to(
         model.device
     )
